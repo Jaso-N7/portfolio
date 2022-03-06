@@ -4,7 +4,6 @@
   :license ""
   :depends-on ("aserve"
                "webactions"
-               "cl-quicklisp"
                "parenscript"
                "css-lite")
   :components ((:file "clpage-patch")
