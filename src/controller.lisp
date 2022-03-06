@@ -1,5 +1,5 @@
 (defpackage controller
-  (:documentation "EMIS Dynamic control component")
+  (:documentation "My personal portfolio")
   (:use #:cl
 	#:net.aserve
 	#:acl-compat.excl
@@ -16,6 +16,7 @@
 ;;; WEBACTION --- Project Description
 
 (webaction-project "portfolio"
+		   :project-prefix "/"
 		   :destination *htdocs*
 		   :index "home"
 		   :map '(("home" "home.clp")
