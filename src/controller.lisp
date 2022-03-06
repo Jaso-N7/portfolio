@@ -20,7 +20,6 @@
 		   :index "home"
 		   :map '(("home" "home.clp")
 			  ("projects" "projects.clp")
-			  ("contact" "contact.clp")
-			  ("blog" "https://rightmindedtech.blogspot.com")))
+			  ("contact" "contact.clp")))
 
 
