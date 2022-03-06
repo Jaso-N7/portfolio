@@ -7,9 +7,10 @@
                "cl-quicklisp"
                "parenscript"
                "css-lite")
-  :components ((:module "src"
-                :components
-                ((:file "main"))))
+  :components ((:file "clpage-patch")
+	       (:module "src"
+		:components
+		((:file "main"))))
   :description "Personal portfolio"
   :in-order-to ((test-op (test-op "portfolio/tests"))))
 
