@@ -9,7 +9,8 @@
   :components ((:file "clpage-patch")
 	       (:module "src"
 		:components
-		((:file "main"))))
+		((:file "controller")
+		 (:file "main"))))
   :description "Personal portfolio"
   :in-order-to ((test-op (test-op "portfolio/tests"))))
 
