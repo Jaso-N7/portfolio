@@ -17,9 +17,10 @@
   :author "Jason S. Robinson"
   :license ""
   :depends-on ("portfolio"
-               "rove")
+	       "cl-quickcheck")
   :components ((:module "tests"
                 :components
                 ((:file "main"))))
   :description "Test system for portfolio"
-  :perform (test-op (op c) (symbol-call :rove :run c)))
+  ;; :perform (test-op (op c) (symbol-call :rove :run c))
+  )
