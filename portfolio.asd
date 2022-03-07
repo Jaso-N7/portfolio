@@ -6,7 +6,8 @@
                "webactions"
                "parenscript"
                "css-lite")
-  :components ((:file "clpage-patch")
+  :components ((:file "html5-tags")
+	       (:file "clpage-patch")
 	       (:module "src"
 		:components
 		((:file "controller")
