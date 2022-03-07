@@ -26,25 +26,6 @@
 
 ;; $Id: clpage.cl,v 1.13 2007/08/28 15:28:12 jkf Exp $
 
-#|
-;; October 22, 2021 at 04:10:11 PM EST - Jason S. Robinson
-
-Attempt to Address error:
-
-Slot NET.ASERVE::OBJECTS is unbound in #<NET.ASERVE:CLP-ENTITY #x302003D7A55D>
-				
-				       
-;; October 22, 2021 at 07:26:39 AM EST - Jason S. Robinson
-					
-This addresses the error:		 
-				       
-Undefined function NET.ASERVE::WEBACTION-COOKIE-DOMAIN called with arguments (#<NET.ASERVE:WEBACTION #x3020030101ED>) 
-
-when Webaction-project is calling a CLP page. Corrected by removing
-the call to WEBACTION-COOKIE-DOMAIN when no cookies are found.
-Currently in the Portable Aserve project, there is no WEBSESSION
-attribute named :DOMAIN
-|#
 
 (eval-when (compile load eval) (require :aserve))
 
@@ -161,8 +142,10 @@ attribute named :DOMAIN
 	     
 
 
-
-
+;; Sun 14 Nov 2021 06:28:32 AM -05 - Jason S. Robinson
+;; Attempt to fix error: Undefined function NET.ASERVE::WEBACTION-COOKIE-DOMAIN called with arguments (#<NET.ASERVE:WEBACTION #x302002F24E3D>)
+(defmethod webaction-cookie-domain ((wa webaction))
+  t)
 
 (defmethod process-entity ((req http-request) (ent clp-entity))
   ;; emit a clp file
@@ -188,9 +171,17 @@ attribute named :DOMAIN
 				:cookie))
 		 else ; no session found via cookie
 		      (setq websession
-			    (make-instance 'websession
-					   :key (next-websession-id sm)
-					   :method :cookie))
+			    (if (webaction-cookie-domain wa)
+				(make-instance 'websession
+					       :key (next-websession-id sm)
+					       ;; fix :DOMAIN is an invalid initialization value for Websession. Correct values are :KEY :DATA :METHOD
+					       ;; Tue 16 Nov 2021 03:14:21 PM -05 - Jason S. Robinson
+
+					       :data (webaction-cookie-domain wa)
+					       :method :cookie)
+			      (make-instance 'websession
+					     :key (next-websession-id sm)
+					     :method :cookie)))
 		      (setf (gethash (websession-key websession)
 				     (sm-websessions sm))
 			    websession)))
@@ -219,23 +210,27 @@ attribute named :DOMAIN
 			     :content-type (content-type ent))
       (if* (and websession
 		(eq :try-cookie (websession-method websession))
-		(or sm	      ; sm already known, otherwise compute it
+		(or sm  ; sm already known, otherwise compute it
 		    (and (setq wa (getf (entity-plist ent) 'webaction))
 			 (setq sm (webaction-websession-master wa)))))
-	 then (set-cookie-header req
+	 then (if (webaction-cookie-domain wa)
+		  (set-cookie-header req 
 				 :name (sm-cookie-name sm)
 				 :value (websession-key websession)
-				 :path (webaction-project-prefix wa)))
+				 :path (webaction-project-prefix wa)
+				 :domain (webaction-cookie-domain wa))
+		  (set-cookie-header req 
+				 :name (sm-cookie-name sm)
+				 :value (websession-key websession)
+				     :path (webaction-project-prefix wa))))
       (setf (reply-header-slot-value req :cache-control) "no-cache")
       (setf (reply-header-slot-value req :pragma) "no-cache")
       
       (with-http-body (req ent
-		       :external-format 
-		       (or (clp-entity-external-format ent)
-			   *default-aserve-external-format*)
-		       )
-	(if* (not (boundp (clp-entity-objects ent)))
-	   then (parse-clp-file ent))
+			   :external-format 
+			   (or (clp-entity-external-format ent)
+			       *default-aserve-external-format*)
+			   )
 	(emit-clp-entity req ent (clp-entity-objects ent))))
     t))
 
@@ -255,11 +250,14 @@ attribute named :DOMAIN
 	       (dependencies (expand-clp-includes objects (file ent)
 						  (clp-entity-external-format ent))))
 	  (if* dependencies 
-	     then (setf (clp-entity-dependencies ent)
-		    (mapcar #'(lambda (filename)
-				(cons filename (file-write-date filename)))
-			    dependencies)))
-	  (setf (clp-entity-objects ent) objects)))
+	       then (setf (clp-entity-dependencies ent)
+			  (mapcar #'(lambda (filename)
+				      (cons filename (file-write-date filename)))
+				  dependencies)))
+	  (setf (clp-entity-objects ent) objects)
+	  ;; Attempting to fix error got error Slot NET.ASERVE::OBJECTS is unbound in #<NET.ASERVE:CLP-ENTITY #x30200305969D>
+	  ;; Sun 14 Nov 2021 05:03:03 PM -05 - Jason S Robinson
+	  objects))
       
     (error (c)
       (logmess (format nil "processing clp file ~s got error ~a"
@@ -274,10 +272,13 @@ attribute named :DOMAIN
     
   (handler-case 
       (with-open-file (p filename 
-		       :direction :input
-                       ;; KLUDGE: (rudi 2004-05-31): revisit this when
-                       ;; other Lisps support external format
-		       #+allegro :external-format #+allegro external-format)
+			 :direction :input
+			 ;; KLUDGE: (rudi 2004-05-31): revisit this when
+			 ;; other Lisps support external format
+			 #+allegro :external-format #+allegro external-format
+			 ;; Sun 14 Nov 2021 06:23:46 AM -05 - Jason S. Robinson
+			 ;; #+ccl ccl:*default-external-format*
+			 )
 	(parse-clp-guts p filename))
       
     (error (c)
@@ -338,7 +339,8 @@ attribute named :DOMAIN
 
 
 
-
+;; Attempting to fix 'Unbound variable: NET.ASERVE::LASTTAG
+;; Sun 14 Nov 2021 03:43:21 PM -05 Jason S Robinson
 (defun parse-clp-guts (p filename)
   (let ((result)
 	(pos-start 0)
@@ -346,6 +348,7 @@ attribute named :DOMAIN
 	(chcount 0)
 	(ch)
 	(res)
+	(lasttag)
 	(backbuffer (make-array 10 :element-type 'character
 				:initial-element #\space))
 	(backindex 0))
@@ -384,61 +387,62 @@ attribute named :DOMAIN
 		  (return))
 	  (incf chcount)
 	  (if* (eq ch #\<)
-	     then 
-		  (setq res (parse-clp-tag p filename))
-		  ;(format t "res is ~s~%" res)
-		  (if* res
-		     then (savestring p pos-start 
-				      (- chcount chstart 1))
-			  (push res result)
-			  (setq pos-start (file-position p)
-				chstart chcount))
-	   elseif (eq ch #\")
-	     then (if* (or (match-buffer backbuffer backindex "=ferh")
-			   ;; check for action= within a form only since
-			   ;; backbase use b:action=
-			   ;; cac 2aug07
- 			   (and (equalp lasttag "form")
- 				(match-buffer backbuffer backindex "=noitca"))
-			   (and (equalp lasttag "frame")
-				(match-buffer backbuffer backindex "=crs"))
-			   )
-		     then (savestring p pos-start (- chcount chstart))
-			  ; scan for tag name
-			  (let ((savepos (file-position p)))
-			    (setq chstart chcount)
-			    (loop
-			      (let ((lastpos (file-position p))
-				    (ch (read-char p nil nil)))
-				(if* (null ch)
+	       then
+	       (multiple-value-setq (res lasttag)
+				    (parse-clp-tag p filename))
+					;(format t "res is ~s~%" res)
+	       (if* res
+		    then (savestring p pos-start 
+				     (- chcount chstart 1))
+		    (push res result)
+		    (setq pos-start (file-position p)
+			  chstart chcount))
+	       elseif (eq ch #\")
+	       then (if* (or (match-buffer backbuffer backindex "=ferh")
+			     ;; check for action= within a form only since
+			     ;; backbase use b:action=
+			     ;; cac 2aug07
+ 			     (and (equalp lasttag "form")
+ 				  (match-buffer backbuffer backindex "=noitca"))
+			     (and (equalp lasttag "frame")
+				  (match-buffer backbuffer backindex "=crs"))
+			     )
+			 then (savestring p pos-start (- chcount chstart))
+					; scan for tag name
+			 (let ((savepos (file-position p)))
+			   (setq chstart chcount)
+			   (loop
+			    (let ((lastpos (file-position p))
+				  (ch (read-char p nil nil)))
+			      (if* (null ch)
 				   then ; no " seen to end tag
-					(savestring p 
-						    pos-start 
-						    (- chcount chstart))
-					(return-from outer nil))
-				(incf chcount)
-				(if* (eq ch #\")
-				   then  ; end of tag, collect
-					(savestring p savepos
-						    (- chcount chstart 1))
-					(let ((res (car result)))
-					  (if* (and (> (length (cadr res)) 0)
-						    (or (member 
-							 (aref (cadr res) 0)
-							 '(#\/ #\# #\?))
-							(match-regexp
-							 "^[A-Za-z]+:" ;eg: http: 
-							 (cadr res)))
-						    )
-					     thenret ; absolute pathname, ok
-					     else (pop result)
-						  (push (wa-cvt (cadr res))
-							result)))
-					(setq pos-start lastpos
-					      chstart (1- chcount))
-					(return))))))
-	     else (setq backindex (mod (1+ backindex) (length backbuffer)))
-		  (setf (aref backbuffer backindex) ch)))))
+				   (savestring p 
+					       pos-start 
+					       (- chcount chstart))
+				   (return-from outer nil))
+			      (incf chcount)
+			      (if* (eq ch #\")
+				   then	; end of tag, collect
+				   (savestring p savepos
+					       (- chcount chstart 1))
+				   (let ((res (car result)))
+				     (if* (and (> (length (cadr res)) 0)
+					       (or (member 
+						    (aref (cadr res) 0)
+						    '(#\/ #\# #\?))
+						   (match-regexp
+						    "^[A-Za-z]+:" ;eg: http: 
+						    (cadr res)))
+					       )
+					  thenret ; absolute pathname, ok
+					  else (pop result)
+					  (push (wa-cvt (cadr res))
+						result)))
+				   (setq pos-start lastpos
+					 chstart (1- chcount))
+				   (return))))))
+	       else (setq backindex (mod (1+ backindex) (length backbuffer)))
+	       (setf (aref backbuffer backindex) ch)))))
       
     ;; return
     (nreverse result)))
