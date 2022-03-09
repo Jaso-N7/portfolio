@@ -4,7 +4,7 @@
 	#:net.aserve
 	#:acl-compat.excl
 	#:net.html.generator
-	#:parenscript
+
 	)
   (:import-from #:scripts
 		#:contact-form))
@@ -36,11 +36,5 @@
 	 #'(lambda (r e)
 	     (with-http-response (r e)
 	       (with-http-body (r e)
-		 (princ (ps
-			  (defun validate-contact-form ()
-			    (progn
-			      (var fullname (chain document (get-element-by-id "fullname")))
-			      (var mailfr (chain document (get-element-by-id "mailfr")))
-			      (var details (chain document (get-element-by-id "details")))
-			      (chain console (log "JS activated")))))
+		 (princ (funcall #'contact-form)
 			*html-stream*)))))

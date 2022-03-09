@@ -1,16 +1,17 @@
 (defsystem "portfolio"
-  :version "0.1.0"
+  :version "0.2.0"
   :author "Jason S. Robinson"
   :license ""
   :depends-on ("aserve"
                "webactions"
                "parenscript"
-               "css-lite")
+               "css-lite") 		; may potentially use https://github.com/eudoxia0/postmaster
   :components ((:file "html5-tags")
 	       (:file "clpage-patch")
 	       (:module "src"
 		:components
-		((:file "controller")
+		((:file "altjs")
+		 (:file "controller")
 		 (:file "main"))))
   :description "Personal portfolio"
   :in-order-to ((test-op (test-op "portfolio/tests"))))
