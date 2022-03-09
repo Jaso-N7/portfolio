@@ -2,8 +2,9 @@
 <html>
     <head>
 	<title>Jason's Portfolio</title>
+	<script type="text/javascript" src="/script.js"></script>
     </head>
-    <body>
+    <body onload="validateContactForm()">
 	<clp_include name="topnav.clp" />
 	<h2>Contact</h2>
 
@@ -24,7 +25,7 @@
 	    </div>
 
 	    <div class="row">
-		<input type="sumbit" value="Send">
+		<input type="submit" value="Send">
 	    </div>
 	</form>
 	
