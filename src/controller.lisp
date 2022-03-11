@@ -25,7 +25,8 @@
 		   :index "home"
 		   :map '(("home" "home.clp")
 			  ("projects" "projects.clp")
-			  ("contact" "contact.clp")))
+			  ("contact" "contact.clp")
+			  ("contact-success" "contact-success.clp")))
 
 
 ;;; JAVASCRIPT

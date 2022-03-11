@@ -7,8 +7,11 @@
     <body>
 	<clp_include name="topnav.clp" />
 	<h2>Contact</h2>
+	
 	<section id="contact">
-	<form onsubmit="validateContactForm()">
+	    <form onsubmit="validateContactForm()"
+		  method="POST"
+		  action="contact-success">
 	    <div class="row">
 		<label for="fullname">Full Name:</label>
 		<input type="text" id="fullname" name="fullname">

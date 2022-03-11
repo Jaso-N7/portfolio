@@ -22,25 +22,24 @@
 	    (progn
 	      (display-error "Please enter your full name")
 	      (chain fullname (focus))
-	      f)))
+	      (chain event (prevent-default)))))
 
 	(return-from validate-contact-form
-	  (when (or (string= (@ fullname value) "")
-		    (<  (length (@ fullname value)) 2))
+	  (when (or (string= (@ mailfr value) "")
+		    (<  (length (@ mailfr value)) 2))
 	    (progn
-	      (alert "Please enter your full name")
-	      (chain fullname (focus))
-	      f)))
+	      (display-error "Please enter your e-mail address")
+	      (chain mailfr (focus))
+	      (chain event (prevent-default)))))
 
 	(return-from validate-contact-form
-	  (when (or (string= (@ fullname value) "")
-		    (<  (length (@ fullname value)) 2))
+	  (when (string= (@ details value) "")
 	    (progn
-	      (alert "Please enter your full name")
-	      (chain fullname (focus))
-	      f)))
+	      (display-error "Please give me more details")
+	      (chain details (focus))
+	      (chain event (prevent-default)))))
 
-	t)) ; Form validated
+	)) ; Otherwise, Form validated
 
     (defun display-error (msg)
       "Creates a span tag and displays a message MSG"
@@ -55,4 +54,4 @@
 	(var current-element (chain document (get-element-by-id "contact")))
 	(chain document body (insert-before new-element current-element))
 	))
-    ))
+  ))
