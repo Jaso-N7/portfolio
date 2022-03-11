@@ -4,11 +4,11 @@
 	<title>Jason's Portfolio</title>
 	<script src="/script.js"></script>
     </head>
-    <body onload="validateContactForm()">
+    <body>
 	<clp_include name="topnav.clp" />
 	<h2>Contact</h2>
-
-	<form>
+	<section id="contact">
+	<form onsubmit="validateContactForm()">
 	    <div class="row">
 		<label for="fullname">Full Name:</label>
 		<input type="text" id="fullname" name="fullname">
@@ -28,6 +28,7 @@
 		<input type="submit" value="Send">
 	    </div>
 	</form>
+	</section>
 	
 	<clp_include name="footer.clp" />
     </body>
