@@ -26,7 +26,7 @@
 		<label for="subject">Consult:</label>
 		<select id="subject" name="subject">
 		    <option value="unselect">Consultancy required:</option>
-		    <option value="cloud">Cloud consultancy"</option>
+		    <option value="cloud">Cloud consultancy</option>
 		    <option value="web-new">New Website consultancy</option>
 		</select>
 	    </div>
