@@ -15,7 +15,7 @@
 	(var fullname (chain document (get-element-by-id "fullname")))
 	(var mailfr (chain document (get-element-by-id "mailfr")))
 	(var details (chain document (get-element-by-id "details")))
-	
+		
 	(return-from validate-contact-form
 	  (when (or (string= (@ fullname value) "")
 		    (< (length (@ fullname value)) 2))
@@ -37,9 +37,7 @@
 	    (progn
 	      (display-error "Please give me more details")
 	      (chain details (focus))
-	      (chain event (prevent-default)))))
-
-	)) ; Otherwise, Form validated
+	      (chain event (prevent-default))))))) ; Otherwise, Form validated
 
     (defun display-error (msg)
       "Creates a span tag and displays a message MSG"
@@ -53,5 +51,4 @@
 	;; add the newly created element and its content into the DOM
 	(var current-element (chain document (get-element-by-id "contact")))
 	(chain document body (insert-before new-element current-element))
-	))
-  ))
+	))))

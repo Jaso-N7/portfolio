@@ -2,7 +2,6 @@
 <html>
     <head>
 	<title>Jason's Portfolio</title>
-	<script src="/script.js"></script>
     </head>
     <body>
 	<clp_include name="topnav.clp" />
