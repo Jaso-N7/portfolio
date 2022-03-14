@@ -17,4 +17,8 @@
     "Global stylesheet"
     (css
       (("body")
-       (:font-family "Helvetica")))))
+       (:color "#4C566A"
+	:background-color "#ECEFF4"
+	:font-family "Helvetica"))
+      (("a")
+       (:color "#5E81AC")))))
