@@ -1,3 +1,3 @@
 <footer>
-&copy; Mindful Engineering 2022
+&copy; Jason Robinson 2022. All rights reserved.
 </footer>
