@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-	<title>Jason's Portfolio</title>
 	<meta charset="utf-8">
-	<link rel="stylesheet" href="/style.css">
+	<meta name="viewport" content="width=device-width">
+	<link rel="stylesheet" href="styles.css">
+	<title>Jason's Portfolio</title>	
     </head>
     <body>
 	<clp_include name="topnav.clp" />

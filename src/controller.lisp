@@ -43,7 +43,7 @@
 
 ;;; CSS
 
-(publish :path "/style.css"
+(publish :path "/styles.css"
 	 :content-type "text/css; charset=utf-8"
 	 :function
 	 #'(lambda (req ent)
