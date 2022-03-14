@@ -1,3 +1,3 @@
 <footer>
-&copy; Jason S. Robinson 2022
+&copy; Mindful Engineering 2022
 </footer>
