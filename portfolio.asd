@@ -1,5 +1,5 @@
 (defsystem "portfolio"
-  :version "0.2.0"
+  :version "0.3.0"
   :author "Jason S. Robinson"
   :license ""
   :depends-on ("aserve"
@@ -11,6 +11,7 @@
 	       (:module "src"
 		:components
 		((:file "altjs")
+		 (:file "altcss")
 		 (:file "controller")
 		 (:file "main"))))
   :description "Personal portfolio"

@@ -7,7 +7,8 @@
 
 	)
   (:import-from #:scripts
-		#:contact-form))
+		#:contact-form)
+  (:import-from #:styles #:style))
 
 (in-package :controller)
 
@@ -39,3 +40,13 @@
 	       (with-http-body (r e)
 		 (princ (funcall #'contact-form)
 			*html-stream*)))))
+
+;;; CSS
+
+(publish :path "/style.css"
+	 :content-type "text/css; charset=utf-8"
+	 :function
+	 #'(lambda (req ent)
+	     (with-http-response (req ent :format :text)
+	       (with-http-body (req ent)
+		 (princ (funcall #'style) *html-stream*)))))
