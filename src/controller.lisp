@@ -25,6 +25,7 @@
 		   :destination *htdocs*
 		   :index "home"
 		   :map '(("home" "home.clp")
+			  ("about" "about.clp")
 			  ("projects" "projects.clp")
 			  ("contact" "contact.clp")
 			  ("contact-success" "contact-success.clp")))
