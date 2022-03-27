@@ -20,6 +20,7 @@
      :font-size "100%") 		; 16px
    '((article aside details figcaption figure footer header menu nav section)
      :display block)
+   '(header ((h1 h4) :letter-spacing 1.5px))
    '(body
      :color "#4C566A"
      :background-color "#ECEFF4"
