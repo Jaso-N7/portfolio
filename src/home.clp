@@ -9,7 +9,7 @@
     <body>
 	<header id="hero">
 	    <clp_include name="topnav.clp" />
-	    <h1>Hi, I'm Jason Robinson</h1>
+	    <h1>Hi! I'm Jason Robinson,</h1>
 	    <h2>Your next <i>Cloud / Web / Dev</i> consultant</h2>
 	    <a id="act" href="contact">Get in touch</a>
 	    <a id="who" href="about">Learn more</a>
