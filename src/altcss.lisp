@@ -13,6 +13,9 @@
    '(body
      :color "#4C566A"
      :background-color "#ECEFF4"
-     :font-family "Helvetica, Arial, sans-serif")
+     :font-family "Helvetica, Arial, sans-serif"
+     :letter-spacing "1px")
    '(a
-     :color "#5E81AC")))
+     :color "#5E81AC")
+   '(h1
+     :letter-spacing "2px")))
