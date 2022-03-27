@@ -13,6 +13,6 @@
    '(body
      :color "#4C566A"
      :background-color "#ECEFF4"
-     :font-family "Helvetica")
+     :font-family "Helvetica, Arial, sans-serif")
    '(a
      :color "#5E81AC")))
