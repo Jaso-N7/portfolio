@@ -8,7 +8,7 @@
 ;;; DATA DEFINITIONS
 
 (defun style ()
-  "Global CSS"
+  "Global CSS. Inspired by Nord-Theme, Visual Scale and html5up.net"
   (lass:compile-and-write
    '(:import (url "https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600"))
    '(html
