@@ -7,7 +7,7 @@
 	<title>Jason's Portfolio</title>
     </head>
     <body>
-	<header>
+	<header id="hero">
 	    <clp_include name="topnav.clp" />
 	    <h1>Hi, I am Jason Robinson</h1>
 	    <h2>Your next <i>Cloud / Web / Dev</i> consultant</h2>

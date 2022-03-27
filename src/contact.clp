@@ -11,7 +11,9 @@
     <body>
 	<clp_include name="topnav.clp" />
 	<h2>Contact</h2>
-	
+	<section id="social">
+	    
+	</section>
 	<section id="contact">
 	    <p>As your next consultant, how may I aid in growing and adding value to your business?</p>
 	    <form onsubmit="validateContactForm()"

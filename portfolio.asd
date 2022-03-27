@@ -1,11 +1,11 @@
 (defsystem "portfolio"
-  :version "0.3.0"
+  :version "0.4.0"
   :author "Jason S. Robinson"
   :license ""
   :depends-on ("aserve"
                "webactions"
                "parenscript"
-               "css-lite") 		; may potentially use https://github.com/eudoxia0/postmaster
+               "lass")		
   :components ((:file "html5-tags")
 	       (:file "clpage-patch")
 	       (:module "src"
