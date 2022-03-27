@@ -1,16 +1,19 @@
 (defsystem "portfolio"
-  :version "0.1.0"
+  :version "0.4.0"
   :author "Jason S. Robinson"
   :license ""
   :depends-on ("aserve"
                "webactions"
-               "cl-quicklisp"
                "parenscript"
-               "css-lite")
-  :components ((:file "clpage-patch")
+               "lass")		
+  :components ((:file "html5-tags")
+	       (:file "clpage-patch")
 	       (:module "src"
 		:components
-		((:file "main"))))
+		((:file "altjs")
+		 (:file "altcss")
+		 (:file "controller")
+		 (:file "main"))))
   :description "Personal portfolio"
   :in-order-to ((test-op (test-op "portfolio/tests"))))
 
